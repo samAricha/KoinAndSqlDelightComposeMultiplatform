@@ -24,21 +24,45 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.ui.tooling.preview)
             implementation(libs.androidx.activity.compose)
+
+            implementation(platform("io.insert-koin:koin-bom:3.5.3"))
+            implementation("io.insert-koin:koin-core")
+            implementation("io.insert-koin:koin-android")
+
+            //<editor-fold desc="Koin Annotations">
+            // Annotations
+            implementation("io.insert-koin:koin-annotations:1.3.0")
         }
-        commonMain.dependencies {
-            implementation(compose.runtime)
-            implementation(compose.foundation)
-            implementation(compose.material)
-            implementation(compose.ui)
-            @OptIn(ExperimentalComposeLibrary::class)
-            implementation(compose.components.resources)
-            implementation(projects.shared)
+
+        val commonMain by getting {
+            // Required so we can access the generated KSP files
+            kotlin.srcDir("build/generated/ksp/metadata/commonMain/kotlin")
+
+            dependencies {
+                implementation(compose.runtime)
+                implementation(compose.foundation)
+                implementation(compose.material)
+                implementation(compose.ui)
+                @OptIn(ExperimentalComposeLibrary::class)
+                implementation(compose.components.resources)
+                implementation(projects.shared)
+
+                ///// KOIN /////
+                implementation(project.dependencies.platform("io.insert-koin:koin-bom:3.5.3"))
+                implementation("io.insert-koin:koin-core")
+                implementation("io.insert-koin:koin-compose")
+
+                ///// KOIN ANNOTATIONS /////
+                implementation("io.insert-koin:koin-annotations:1.3.0")
+            }
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
         }
     }
 }
+
+
 
 android {
     namespace = "org.teka.project"
